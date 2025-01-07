@@ -14,6 +14,9 @@ import { ChatCompletionChunk } from 'openai/resources';
 import { ProsConsMessage } from './interfaces/pros-cons-discusser.interface';
 import { TranslateMessage } from './interfaces/translate.interface';
 import { TranslateDto } from './dto/request/translate.dto';
+import { TextToAudioDto } from './dto/request/text-to-audio.dto';
+import { TextToAudioMessage } from './interfaces/text-to-audio.interface';
+import { textToAudioUseCase } from './use-cases/text-to-audio.use-case';
 
 @Injectable()
 export class GptService {
@@ -51,5 +54,13 @@ export class GptService {
 
   async translate(translateDto: TranslateDto): Promise<TranslateMessage> {
     return await translateUseCase(this.openai, translateDto);
+  }
+
+  // text to audio
+
+  async textToAudio(
+    textToAudioDto: TextToAudioDto,
+  ): Promise<TextToAudioMessage> {
+    return await textToAudioUseCase(this.openai, textToAudioDto);
   }
 }

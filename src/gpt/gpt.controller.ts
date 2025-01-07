@@ -1,8 +1,11 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
+  Param,
   Post,
   Res,
 } from '@nestjs/common';
@@ -14,6 +17,9 @@ import { Response } from 'express';
 import { ProsConsMessage } from './interfaces/pros-cons-discusser.interface';
 import { TranslateDto } from './dto/request/translate.dto';
 import { TranslateMessage } from './interfaces/translate.interface';
+import { TextToAudioDto } from './dto/request/text-to-audio.dto';
+import * as path from 'path';
+import * as fs from 'fs';
 
 @Controller('gpt')
 export class GptController {
@@ -53,10 +59,44 @@ export class GptController {
     response.end();
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post('translate')
   async translate(
     @Body() translateDto: TranslateDto,
   ): Promise<TranslateMessage> {
     return await this.gptService.translate(translateDto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('text-to-audio')
+  async textToAudio(
+    @Body() textToAudioDto: TextToAudioDto,
+    @Res() response: Response,
+  ): Promise<void> {
+    const { content } = await this.gptService.textToAudio(textToAudioDto);
+
+    response.setHeader('Content-Type', 'audio/mp3');
+    response.sendFile(content);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('text-to-audio/:name')
+  async textToAudioGetyName(
+    @Param('name') name: string,
+    @Res() response: Response,
+  ): Promise<void> {
+    response.setHeader('Content-Type', 'audio/mp3');
+
+    const folderPath = path.resolve(
+      __dirname,
+      `../../generated/audios/`,
+      `${name}.mp3`,
+    );
+
+    const wasFound = fs.existsSync(folderPath);
+
+    if (!wasFound) throw new NotFoundException(`Audio ${name} not found`);
+
+    response.sendFile(folderPath);
   }
 }

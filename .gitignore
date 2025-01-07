@@ -5,6 +5,12 @@
 
 .env
 
+
+# Exclude generated content
+/generated/*
+!/generated/.gitkeep
+!/generated/audios/.gitkeep
+
 # Logs
 logs
 *.log
