@@ -4,6 +4,7 @@ import {
   orthographyCheckUseCase,
   prosConsDiscusserUseCase,
   prosConsDiscusserStreamUseCase,
+  translateUseCase,
 } from './use-cases';
 import OpenAI from 'openai';
 import { OrthographyMessage } from './interfaces/orthography.interface';
@@ -11,6 +12,8 @@ import { ProsConsDiscusserDto } from './dto/request/pros-cons-discusser.dto';
 import { Stream } from 'openai/streaming';
 import { ChatCompletionChunk } from 'openai/resources';
 import { ProsConsMessage } from './interfaces/pros-cons-discusser.interface';
+import { TranslateMessage } from './interfaces/translate.interface';
+import { TranslateDto } from './dto/request/translate.dto';
 
 @Injectable()
 export class GptService {
@@ -42,5 +45,11 @@ export class GptService {
       this.openai,
       prosConsDiscusserDto,
     );
+  }
+
+  // translate
+
+  async translate(translateDto: TranslateDto): Promise<TranslateMessage> {
+    return await translateUseCase(this.openai, translateDto);
   }
 }

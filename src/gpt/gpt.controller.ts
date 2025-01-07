@@ -12,6 +12,8 @@ import { OrthographyMessage } from './interfaces/orthography.interface';
 import { ProsConsDiscusserDto } from './dto/request/pros-cons-discusser.dto';
 import { Response } from 'express';
 import { ProsConsMessage } from './interfaces/pros-cons-discusser.interface';
+import { TranslateDto } from './dto/request/translate.dto';
+import { TranslateMessage } from './interfaces/translate.interface';
 
 @Controller('gpt')
 export class GptController {
@@ -49,5 +51,12 @@ export class GptController {
     }
 
     response.end();
+  }
+
+  @Post('translate')
+  async translate(
+    @Body() translateDto: TranslateDto,
+  ): Promise<TranslateMessage> {
+    return await this.gptService.translate(translateDto);
   }
 }
