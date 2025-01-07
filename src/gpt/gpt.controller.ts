@@ -1,7 +1,17 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { GptService } from './gpt.service';
 import { OrthographyDto } from './dto/request/orthography.dto';
 import { OrthographyMessage } from './interfaces/orthography.interface';
+import { ProsConsDiscusserDto } from './dto/request/pros-cons-discusser.dto';
+import { Response } from 'express';
+import { ProsConsMessage } from './interfaces/pros-cons-discusser.interface';
 
 @Controller('gpt')
 export class GptController {
@@ -12,8 +22,32 @@ export class GptController {
   async orthographyCheck(
     @Body() orthographyDto: OrthographyDto,
   ): Promise<OrthographyMessage> {
-    return this.gptService.orthographyCheck(orthographyDto);
+    return await this.gptService.orthographyCheck(orthographyDto);
   }
 
-  
+  @HttpCode(HttpStatus.OK)
+  @Post('pros-cons-discusser')
+  async prosConsDiscusser(
+    @Body() prosConsDiscusserDto: ProsConsDiscusserDto,
+  ): Promise<ProsConsMessage> {
+    return await this.gptService.prosConsDiscusser(prosConsDiscusserDto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('pros-cons-discusser-stream')
+  async prosConsDiscusserStream(
+    @Body() prosConsDiscusserDto: ProsConsDiscusserDto,
+    @Res() response: Response,
+  ) {
+    const stream =
+      await this.gptService.prosConsDiscusserStream(prosConsDiscusserDto);
+
+    response.status(HttpStatus.OK);
+
+    for await (const chunk of stream) {
+      response.write(chunk.choices[0]?.delta?.content ?? '');
+    }
+
+    response.end();
+  }
 }

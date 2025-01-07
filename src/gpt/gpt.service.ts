@@ -1,8 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { OrthographyDto } from './dto/request/orthography.dto';
-import { orthographyCheckUseCase, prosConsDiscusserUseCase } from './use-cases';
+import {
+  orthographyCheckUseCase,
+  prosConsDiscusserUseCase,
+  prosConsDiscusserStreamUseCase,
+} from './use-cases';
 import OpenAI from 'openai';
 import { OrthographyMessage } from './interfaces/orthography.interface';
+import { ProsConsDiscusserDto } from './dto/request/pros-cons-discusser.dto';
+import { Stream } from 'openai/streaming';
+import { ChatCompletionChunk } from 'openai/resources';
+import { ProsConsMessage } from './interfaces/pros-cons-discusser.interface';
 
 @Injectable()
 export class GptService {
@@ -21,7 +29,18 @@ export class GptService {
 
   // pros and cons discusser
 
-  prosConsDiscusser(orthographyDto: OrthographyDto): Promise<string> {
-    return prosConsDiscusserUseCase(this.openai, orthographyDto);
+  prosConsDiscusser(
+    prosConsDiscusserDto: ProsConsDiscusserDto,
+  ): Promise<ProsConsMessage> {
+    return prosConsDiscusserUseCase(this.openai, prosConsDiscusserDto);
+  }
+
+  async prosConsDiscusserStream(
+    prosConsDiscusserDto: ProsConsDiscusserDto,
+  ): Promise<Stream<ChatCompletionChunk>> {
+    return await prosConsDiscusserStreamUseCase(
+      this.openai,
+      prosConsDiscusserDto,
+    );
   }
 }
