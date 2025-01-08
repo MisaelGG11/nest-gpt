@@ -1,13 +1,18 @@
 import {
   Body,
   Controller,
+  FileTypeValidator,
   Get,
   HttpCode,
   HttpStatus,
+  MaxFileSizeValidator,
   NotFoundException,
   Param,
+  ParseFilePipe,
   Post,
   Res,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { GptService } from './gpt.service';
 import { OrthographyDto } from './dto/request/orthography.dto';
@@ -20,6 +25,10 @@ import { TranslateMessage } from './interfaces/translate.interface';
 import { TextToAudioDto } from './dto/request/text-to-audio.dto';
 import * as path from 'path';
 import * as fs from 'fs';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { TranscriptionVerbose } from 'openai/resources/audio/transcriptions';
+import { AudioToTextDto } from './dto/request/audio-to-text.dto';
 
 @Controller('gpt')
 export class GptController {
@@ -98,5 +107,37 @@ export class GptController {
     if (!wasFound) throw new NotFoundException(`Audio ${name} not found`);
 
     response.sendFile(folderPath);
+  }
+
+  @Post('audio-to-text')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './generated/uploads',
+        filename: (req, file, cb) => {
+          const fileExt = file.originalname.split('.').pop();
+          return cb(null, `${new Date().getTime()}.${fileExt}`);
+        },
+      }),
+    }),
+  )
+  async audioToText(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({
+            fileType: 'audio/*',
+          }),
+          new MaxFileSizeValidator({
+            maxSize: 10 * 1024 * 1024,
+            message: 'File is bigger than 10MB',
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+    @Body() audioToTextDto: AudioToTextDto,
+  ): Promise<TranscriptionVerbose> {
+    return await this.gptService.audioToText(file, audioToTextDto.prompt);
   }
 }

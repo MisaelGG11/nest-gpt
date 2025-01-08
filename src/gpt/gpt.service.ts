@@ -17,6 +17,8 @@ import { TranslateDto } from './dto/request/translate.dto';
 import { TextToAudioDto } from './dto/request/text-to-audio.dto';
 import { TextToAudioMessage } from './interfaces/text-to-audio.interface';
 import { textToAudioUseCase } from './use-cases/text-to-audio.use-case';
+import { audioToTextUseCase } from './use-cases/audio-to-text.use-case';
+import { TranscriptionVerbose } from 'openai/resources/audio/transcriptions';
 
 @Injectable()
 export class GptService {
@@ -62,5 +64,13 @@ export class GptService {
     textToAudioDto: TextToAudioDto,
   ): Promise<TextToAudioMessage> {
     return await textToAudioUseCase(this.openai, textToAudioDto);
+  }
+
+  // audio to text
+  async audioToText(
+    audioFile: Express.Multer.File,
+    prompt?: string,
+  ): Promise<TranscriptionVerbose> {
+    return await audioToTextUseCase(this.openai, { audioFile, prompt });
   }
 }
