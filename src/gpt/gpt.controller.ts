@@ -29,6 +29,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { TranscriptionVerbose } from 'openai/resources/audio/transcriptions';
 import { AudioToTextDto } from './dto/request/audio-to-text.dto';
+import { ImageGenerationDto } from './dto/request/image-generation.dto';
+import { ImageGenerationMessage } from './interfaces/image-generation.interface';
+import { ImageVariationDto } from './dto/request/image-variation.dto';
 
 @Controller('gpt')
 export class GptController {
@@ -109,6 +112,7 @@ export class GptController {
     response.sendFile(folderPath);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post('audio-to-text')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -139,5 +143,40 @@ export class GptController {
     @Body() audioToTextDto: AudioToTextDto,
   ): Promise<TranscriptionVerbose> {
     return await this.gptService.audioToText(file, audioToTextDto.prompt);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('image-generation')
+  async imageGeneration(
+    @Body() imageGenerationDto: ImageGenerationDto,
+  ): Promise<ImageGenerationMessage> {
+    return await this.gptService.imageGeneration(imageGenerationDto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('image-generation/:name')
+  async imageGenerationGetyName(
+    @Param('name') name: string,
+    @Res() response: Response,
+  ): Promise<void> {
+    const folderPath = path.resolve(
+      __dirname,
+      `../../generated/images/`,
+      `${name}`,
+    );
+
+    const wasFound = fs.existsSync(folderPath);
+
+    if (!wasFound) throw new NotFoundException(`Image ${name} not found`);
+
+    response.sendFile(folderPath);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('image-variation')
+  async imageVariation(
+    @Body() imageVariationDto: ImageVariationDto,
+  ): Promise<ImageGenerationMessage> {
+    return await this.gptService.imageVariation(imageVariationDto);
   }
 }
