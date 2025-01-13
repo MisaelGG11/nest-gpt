@@ -14,6 +14,7 @@ import {
   audioToTextUseCase,
   imageGenerationUseCase,
   imageVariationUseCase,
+  imageToTextUseCase,
 } from './use-cases';
 
 import { OrthographyDto } from './dto/request/orthography.dto';
@@ -27,6 +28,7 @@ import { TextToAudioMessage } from './interfaces/text-to-audio.interface';
 import { ImageGenerationDto } from './dto/request/image-generation.dto';
 import { ImageGenerationMessage } from './interfaces/image-generation.interface';
 import { ImageVariationDto } from './dto/request/image-variation.dto';
+import { ImageToTextMessage } from './interfaces/image-to-text.interface';
 
 @Injectable()
 export class GptService {
@@ -92,9 +94,19 @@ export class GptService {
   }
 
   // image variation
+
   async imageVariation(
     imageVariationDto: ImageVariationDto,
   ): Promise<ImageGenerationMessage> {
     return await imageVariationUseCase(this.openai, imageVariationDto);
+  }
+
+  // image to text
+
+  async imageToText(
+    imageFile: Express.Multer.File,
+    prompt?: string,
+  ): Promise<ImageToTextMessage> {
+    return await imageToTextUseCase(this.openai, { imageFile, prompt });
   }
 }

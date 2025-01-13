@@ -32,6 +32,8 @@ import { AudioToTextDto } from './dto/request/audio-to-text.dto';
 import { ImageGenerationDto } from './dto/request/image-generation.dto';
 import { ImageGenerationMessage } from './interfaces/image-generation.interface';
 import { ImageVariationDto } from './dto/request/image-variation.dto';
+import { ImageToTextDto } from './dto/request/image-to-text.dto';
+import { ImageToTextMessage } from './interfaces/image-to-text.interface';
 
 @Controller('gpt')
 export class GptController {
@@ -178,5 +180,38 @@ export class GptController {
     @Body() imageVariationDto: ImageVariationDto,
   ): Promise<ImageGenerationMessage> {
     return await this.gptService.imageVariation(imageVariationDto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('image-to-text')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './generated/uploads',
+        filename: (req, file, cb) => {
+          const fileExt = file.originalname.split('.').pop();
+          return cb(null, `${new Date().getTime()}.${fileExt}`);
+        },
+      }),
+    }),
+  )
+  async imageToText(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({
+            fileType: 'image/*',
+          }),
+          new MaxFileSizeValidator({
+            maxSize: 10 * 1024 * 1024,
+            message: 'File is bigger than 10MB',
+          }),
+        ],
+      }),
+    )
+    image: Express.Multer.File,
+    @Body() imageToTextDto: ImageToTextDto,
+  ): Promise<ImageToTextMessage> {
+    return await this.gptService.imageToText(image, imageToTextDto.prompt);
   }
 }
