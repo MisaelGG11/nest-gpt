@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { SamAssistantService } from './sam-assistant.service';
-import { QuestionDto } from './dtos/request/question.dto';
+
 import { Thread } from 'openai/resources/beta/threads/threads';
-import { MessageDto } from './dtos/response/message.dto';
+
+import { SamAssistantService } from '@assistant/sam-assistant.service';
+import { QuestionDto, MessageDto } from '@assistant/dtos';
 
 @Controller('sam-assistant')
 export class SamAssistantController {

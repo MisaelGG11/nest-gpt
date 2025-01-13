@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { ProsConsMessage } from '../interfaces/pros-cons-discusser.interface';
+import { ProsConsMessage } from '@gpt/interfaces';
 
 interface Options {
   prompt: string;

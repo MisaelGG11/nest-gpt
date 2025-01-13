@@ -1,7 +1,9 @@
-import OpenAI from 'openai';
-import { TextToAudioMessage } from '../interfaces/text-to-audio.interface';
 import * as path from 'path';
 import * as fs from 'fs';
+
+import OpenAI from 'openai';
+
+import { TextToAudioMessage } from '@gpt/interfaces';
 
 interface Options {
   prompt: string;

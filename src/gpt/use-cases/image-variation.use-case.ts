@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 
 import OpenAI from 'openai';
-import { ImageGenerationMessage } from '../interfaces/image-generation.interface';
-import { saveImageAsPng } from 'src/helper';
+
+import { ImageGenerationMessage } from '@gpt/interfaces';
+import { saveImageAsPng } from '@helper/index';
 
 interface Options {
   baseImage: string;

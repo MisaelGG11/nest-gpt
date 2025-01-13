@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
-import { TranslateMessage } from '../interfaces/translate.interface';
+
+import { TranslateMessage } from '@gpt/interfaces';
 
 interface Options {
   prompt: string;

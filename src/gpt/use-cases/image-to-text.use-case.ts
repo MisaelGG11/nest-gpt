@@ -1,6 +1,8 @@
 import * as fs from 'fs';
+
 import OpenAI from 'openai';
-import { ImageToTextMessage } from '../interfaces/image-to-text.interface';
+
+import { ImageToTextMessage } from '@gpt/interfaces';
 
 interface Options {
   prompt?: string;

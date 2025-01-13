@@ -15,20 +15,25 @@ import {
   imageGenerationUseCase,
   imageVariationUseCase,
   imageToTextUseCase,
-} from './use-cases';
+} from '@gpt/use-cases';
 
-import { OrthographyDto } from './dto/request/orthography.dto';
-import { OrthographyMessage } from './interfaces/orthography.interface';
-import { ProsConsDiscusserDto } from './dto/request/pros-cons-discusser.dto';
-import { ProsConsMessage } from './interfaces/pros-cons-discusser.interface';
-import { TranslateDto } from './dto/request/translate.dto';
-import { TranslateMessage } from './interfaces/translate.interface';
-import { TextToAudioDto } from './dto/request/text-to-audio.dto';
-import { TextToAudioMessage } from './interfaces/text-to-audio.interface';
-import { ImageGenerationDto } from './dto/request/image-generation.dto';
-import { ImageGenerationMessage } from './interfaces/image-generation.interface';
-import { ImageVariationDto } from './dto/request/image-variation.dto';
-import { ImageToTextMessage } from './interfaces/image-to-text.interface';
+import {
+  OrthographyDto,
+  ProsConsDiscusserDto,
+  TranslateDto,
+  TextToAudioDto,
+  ImageGenerationDto,
+  ImageVariationDto,
+} from '@gpt/dto';
+
+import {
+  OrthographyMessage,
+  ProsConsMessage,
+  TranslateMessage,
+  TextToAudioMessage,
+  ImageGenerationMessage,
+  ImageToTextMessage,
+} from '@gpt/interfaces';
 
 @Injectable()
 export class GptService {

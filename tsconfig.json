@@ -2,6 +2,13 @@
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "@gpt/*": ["src/gpt/*"],
+      "@assistant/*": ["src/sam-assistant/*"],
+      "@config/*": ["src/config/*"],
+      "@helper/*": ["src/helper/*"]
+    },
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

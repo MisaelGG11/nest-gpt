@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+
 import { MessageDto } from '../dtos/response/message.dto';
 
 interface Options {

@@ -1,3 +1,6 @@
+import * as path from 'path';
+import * as fs from 'fs';
+
 import {
   Body,
   Controller,
@@ -14,26 +17,32 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { GptService } from './gpt.service';
-import { OrthographyDto } from './dto/request/orthography.dto';
-import { OrthographyMessage } from './interfaces/orthography.interface';
-import { ProsConsDiscusserDto } from './dto/request/pros-cons-discusser.dto';
-import { Response } from 'express';
-import { ProsConsMessage } from './interfaces/pros-cons-discusser.interface';
-import { TranslateDto } from './dto/request/translate.dto';
-import { TranslateMessage } from './interfaces/translate.interface';
-import { TextToAudioDto } from './dto/request/text-to-audio.dto';
-import * as path from 'path';
-import * as fs from 'fs';
 import { FileInterceptor } from '@nestjs/platform-express';
+
+import { Response } from 'express';
 import { diskStorage } from 'multer';
 import { TranscriptionVerbose } from 'openai/resources/audio/transcriptions';
-import { AudioToTextDto } from './dto/request/audio-to-text.dto';
-import { ImageGenerationDto } from './dto/request/image-generation.dto';
-import { ImageGenerationMessage } from './interfaces/image-generation.interface';
-import { ImageVariationDto } from './dto/request/image-variation.dto';
-import { ImageToTextDto } from './dto/request/image-to-text.dto';
-import { ImageToTextMessage } from './interfaces/image-to-text.interface';
+
+import { GptService } from '@gpt/gpt.service';
+
+import {
+  OrthographyDto,
+  ProsConsDiscusserDto,
+  TranslateDto,
+  TextToAudioDto,
+  AudioToTextDto,
+  ImageGenerationDto,
+  ImageVariationDto,
+  ImageToTextDto,
+} from '@gpt/dto';
+
+import {
+  OrthographyMessage,
+  ProsConsMessage,
+  TranslateMessage,
+  ImageGenerationMessage,
+  ImageToTextMessage,
+} from '@gpt/interfaces';
 
 @Controller('gpt')
 export class GptController {

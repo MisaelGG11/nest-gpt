@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
-import { OrthographyMessage } from '../interfaces/orthography.interface';
+
+import { OrthographyMessage } from '@gpt/interfaces';
 
 interface Options {
   prompt: string;

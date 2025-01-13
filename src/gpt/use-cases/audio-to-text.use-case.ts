@@ -1,5 +1,6 @@
-import OpenAI from 'openai';
 import * as fs from 'fs';
+
+import OpenAI from 'openai';
 import { TranscriptionVerbose } from 'openai/resources/audio/transcriptions';
 
 interface Options {

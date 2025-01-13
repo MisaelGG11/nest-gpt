@@ -1,15 +1,17 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+
+import OpenAI from 'openai';
+import { Thread } from 'openai/resources/beta/threads/threads';
+
 import {
   createMessageUseCase,
   createRunUseCase,
   createThreadUseCase,
   checkCompleteStatusUseCase,
   getMessageListUseCase,
-} from './use-cases';
-import OpenAI from 'openai';
-import { Thread } from 'openai/resources/beta/threads/threads';
-import { QuestionDto } from './dtos/request/question.dto';
-import { MessageDto } from './dtos/response/message.dto';
+} from '@assistant/use-cases';
+
+import { QuestionDto, MessageDto } from '@assistant/dtos';
 
 @Injectable()
 export class SamAssistantService {
